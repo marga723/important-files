@@ -1,0 +1,68 @@
+class Product:
+    def __init__(self, id, name, price):
+        self.id = id
+        self.name = name
+        self.price = price
+
+class ShoppingCart:
+    def __init__(self):
+        self.items = []
+
+    def add_item(self, product, quantity):
+        self.items.append({"product": product, "quantity": quantity})
+
+    def remove_item(self, product_id):
+        for item in self.items:
+            if item["product"].id == product_id:
+                self.items.remove(item)
+                return True
+        return False
+
+    def calculate_total(self):
+        total = 0.0
+        for item in self.items:
+            total += item["product"].price * item["quantity"]
+        return total
+
+class BillingSystem:
+    def __init__(self):
+        self.shopping_cart = ShoppingCart()
+
+    def add_to_cart(self, product, quantity):
+        self.shopping_cart.add_item(product, quantity)
+
+    def remove_from_cart(self, product_id):
+        return self.shopping_cart.remove_item(product_id)
+
+    def checkout(self):
+        total_amount = self.shopping_cart.calculate_total()
+        self.print_receipt(total_amount)
+        self.shopping_cart.items = []
+
+    def print_receipt(self, total_amount):
+        print("Receipt")
+        print("--------")
+        for item in self.shopping_cart.items:
+            print(f"{item['product'].name} - Quantity: {item['quantity']}")
+        print(f"Total amount to be paid: ${total_amount:.2f}")
+
+# Example usage:
+if __name__ == "__main__":
+    # Creating some sample products
+    product1 = Product(1, "Laptop", 1500.00)
+    product2 = Product(2, "Mouse", 20.00)
+    product3 = Product(3, "Keyboard", 100.00)
+
+    # Initializing the billing system
+    billing_system = BillingSystem()
+
+    # Adding products to the shopping cart
+    billing_system.add_to_cart(product1, 1)
+    billing_system.add_to_cart(product2, 2)
+    billing_system.add_to_cart(product3, 1)
+
+    # Removing a product from the shopping cart (if needed)
+    # billing_system.remove_from_cart(2)
+
+    # Checking out and printing the receipt
+    billing_system.checkout()
