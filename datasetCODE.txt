@@ -1,0 +1,100 @@
+
+import matplotlib.pyplot as plt
+from google.colab import files
+import pandas as pd
+import seaborn as sns
+from wordcloud import WordCloud
+
+uploaded = files.upload()
+
+filename = list(uploaded.keys())[0]
+df = pd.read_csv(filename, encoding="utf-8", on_bad_lines="skip")
+
+sns.set(style="whitegrid")
+plt.rcParams["font.family"] = "DejaVu Sans"
+
+
+song_count = df['Author'].value_counts().sort_values(ascending=False)
+top_authors = song_count.head(15)
+colors = sns.color_palette("Set2", len(top_authors))
+
+
+fig, axes = plt.subplots(2, 2, figsize=(18, 12))
+fig.suptitle("🎵 Spotify Songs Dashboard", fontsize=22, fontweight="bold", color="#2C3E50")
+
+
+bars = axes[0, 0].bar(
+    top_authors.index,
+    top_authors.values,
+    color=colors,
+    edgecolor="black",
+    linewidth=1.2
+)
+
+axes[0, 0].set_title("Top 15 Artists by Song Count", fontsize=16, fontweight="bold", color="#2C3E50")
+axes[0, 0].set_xlabel("Author", fontsize=13)
+axes[0, 0].set_ylabel("Number of Songs", fontsize=13)
+axes[0, 0].tick_params(axis='x', rotation=45, labelsize=10)
+
+for bar in bars:
+    yval = bar.get_height()
+    axes[0, 0].text(
+        bar.get_x() + bar.get_width()/2,
+        yval + 0.5,
+        f"{int(yval)}",
+        ha="center",
+        va="bottom",
+        fontsize=9,
+        fontweight="bold",
+        color="#2C3E50"
+    )
+
+axes[0, 0].grid(axis="y", linestyle="--", alpha=0.6)
+sns.despine(ax=axes[0, 0])
+
+sns.barplot(
+    x=top_authors.values,
+    y=top_authors.index,
+    palette="viridis",
+    ax=axes[0, 1],
+    edgecolor="black"
+)
+axes[0, 1].set_title("Top 15 Artists (Horizontal View)", fontsize=16, fontweight="bold", color="#2C3E50")
+axes[0, 1].set_xlabel("Number of Songs", fontsize=13)
+axes[0, 1].set_ylabel("Author", fontsize=13)
+axes[0, 1].grid(axis="x", linestyle="--", alpha=0.6)
+sns.despine(ax=axes[0, 1])
+
+
+wedges, texts, autotexts = axes[1, 0].pie(
+    top_authors.values,
+    labels=top_authors.index,
+    autopct="%1.1f%%",
+    startangle=140,
+    colors=colors,
+    textprops={'fontsize': 9}
+)
+centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+fig.gca().add_artist(centre_circle)
+axes[1, 0].set_title("Song Share by Top 15 Artists", fontsize=16, fontweight="bold", color="#2C3E50")
+
+
+if 'Title' in df.columns:
+    text = " ".join(df['Title'].dropna().astype(str))
+    wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='cool').generate(text)
+    axes[1, 1].imshow(wordcloud, interpolation='bilinear')
+    axes[1, 1].axis('off')
+    axes[1, 1].set_title("Most Common Words in Song Titles", fontsize=16, fontweight="bold", color="#2C3E50")
+else:
+    axes[1, 1].text(0.5, 0.5, "⚠️ 'Title' column not found.", ha='center', fontsize=12)
+
+
+plt.tight_layout(rect=[0, 0, 1, 0.97])
+plt.show()
+
+
+
+
+
+
+
