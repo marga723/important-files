@@ -1,0 +1,6 @@
+﻿Build started at 8:40 pm...
+1>------ Build started: Project: WindowsApp1, Configuration: Debug Any CPU ------
+1>C:\Users\HP\source\repos\WindowsApp1\WindowsApp1\Form1.vb(4,32): error BC30638: Array bounds cannot appear in type specifiers.
+1>C:\Users\HP\source\repos\WindowsApp1\WindowsApp1\Form1.vb(27,20): error BC30205: End of statement expected.
+========== Build: 0 succeeded, 1 failed, 0 up-to-date, 0 skipped ==========
+========== Build completed at 8:40 pm and took 08.478 seconds ==========
