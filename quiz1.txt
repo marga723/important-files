@@ -1,0 +1,68 @@
+package jg;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class figuracion {
+	
+public static void main (String[] args) {
+String url = "jdbc:mysql://localhost: 3306/table";
+String user = "root";
+String password = "";
+
+try {
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection conn = DriverManager.getConnection(url,user,password);
+System.out.println("Connected to MySQL!");
+
+String sql = "INSERT INTO studrecord (ID, Name, Section, Year) VALUES(|102, 'Glenn', 'B' ,4)";
+Statement stmt = conn. createStatement();
+int rows = stmt.executeUpdate(sql);
+
+if (rows > 0) {
+System.out-println ("Record inserted successfully!");
+}
+conn.close();
+}catch(Exception e) {
+e.printStackTrace();
+}
+try {
+	Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection(url,user,password);
+			System.out.println("Connected to MySQL!");
+			
+			String sql = "SELECT * FROM studrecord";
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery (sql);
+			
+			while (rs.next()) {
+				int ID = rs.getInt("ID");
+				String Name = rs.getString ("Name");
+				String Section = rs.getString ("Section");
+				int Year = rs.getInt ("Year");
+				System.out.println(ID + " | " + Name + " | " + Section + " | " + Year);
+							
+}
+			
+			conn.close();
+} catch (Exception e) {
+	e.printStackTrace();
+	
+}
+
+private static void deleteStudentById(Connection conn, int id) throws SQLException {
+    String sql = "DELETE FROM students WHERE id = ?";
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, id);
+        int rows = pstmt.executeUpdate();
+        if (rows > 0) {
+            System.out.println(" Deleted student with ID " + id);
+        } else {
+            System.out.println(" No student found with ID " + id);
+        }
+    }
+}
+}
+
